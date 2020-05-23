@@ -1,5 +1,3 @@
-
-
 import 'package:json_api_common/src/query/query_parameters.dart';
 
 /// Query parameters defining Sparse Fieldsets

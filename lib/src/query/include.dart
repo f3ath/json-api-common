@@ -2,8 +2,6 @@ import 'dart:collection';
 
 import 'package:json_api_common/src/query/query_parameters.dart';
 
-
-
 /// Query parameter defining inclusion of related resources.
 /// @see https://jsonapi.org/format/#fetching-includes
 class Include extends QueryParameters with IterableMixin<String> {

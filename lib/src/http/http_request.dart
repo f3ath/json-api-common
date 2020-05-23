@@ -1,4 +1,3 @@
-
 import 'package:json_api_common/src/http/method.dart';
 
 /// The request which is sent by the client and received by the server

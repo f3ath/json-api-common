@@ -1,4 +1,3 @@
-
 import 'package:json_api_common/src/http/http_request.dart';
 import 'package:json_api_common/src/http/http_response.dart';
 
