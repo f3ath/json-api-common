@@ -3,8 +3,8 @@ import 'package:test/test.dart';
 
 void main() {
   test('emptiness', () {
-    expect(Fields({}).isEmpty, isTrue);
-    expect(Fields({}).isNotEmpty, isFalse);
+    expect(Fields().isEmpty, isTrue);
+    expect(Fields().isNotEmpty, isFalse);
 
     expect(
         Fields({
@@ -33,14 +33,12 @@ void main() {
     expect(fields['people'], ['name', 'age']);
   });
 
-  test('Can add to uri', () {
-    final fields = Fields({
-      'articles': ['title', 'body'],
-      'people': ['name']
-    });
-    final uri = Uri.parse('/articles');
-
-    expect(fields.addToUri(uri).toString(),
-        '/articles?fields%5Barticles%5D=title%2Cbody&fields%5Bpeople%5D=name');
+  test('Can convert to query parameters', () {
+    expect(
+        Fields({
+          'articles': ['title', 'body'],
+          'people': ['name']
+        }).asQueryParameters,
+        {'fields[articles]': 'title,body', 'fields[people]': 'name'});
   });
 }

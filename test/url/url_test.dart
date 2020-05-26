@@ -1,9 +1,9 @@
-import 'package:json_api_common/routing.dart';
+import 'package:json_api_common/url_design.dart';
 import 'package:test/test.dart';
 
 void main() {
   test('URIs start with slashes when no base provided', () {
-    final r = Routing();
+    final r = UrlDesign();
     expect(r.collection('books').toString(), '/books');
     expect(r.resource('books', '42').toString(), '/books/42');
     expect(r.related('books', '42', 'author').toString(), '/books/42/author');
@@ -12,7 +12,7 @@ void main() {
   });
 
   test('Authority is retained if exists in base', () {
-    final r = Routing(Uri.parse('https://example.com'));
+    final r = UrlDesign(Uri.parse('https://example.com'));
     expect(r.collection('books').toString(), 'https://example.com/books');
     expect(
         r.resource('books', '42').toString(), 'https://example.com/books/42');
@@ -23,7 +23,7 @@ void main() {
   });
 
   test('Authority is retained if exists in base (non-directory path)', () {
-    final r = Routing(Uri.parse('https://example.com/foo'));
+    final r = UrlDesign(Uri.parse('https://example.com/foo'));
     expect(r.collection('books').toString(), 'https://example.com/books');
     expect(
         r.resource('books', '42').toString(), 'https://example.com/books/42');
@@ -34,7 +34,7 @@ void main() {
   });
 
   test('Authority and path is retained if exists in base (directory path)', () {
-    final r = Routing(Uri.parse('https://example.com/foo/'));
+    final r = UrlDesign(Uri.parse('https://example.com/foo/'));
     expect(r.collection('books').toString(), 'https://example.com/foo/books');
     expect(r.resource('books', '42').toString(),
         'https://example.com/foo/books/42');

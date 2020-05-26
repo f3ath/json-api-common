@@ -1,30 +1,38 @@
 import 'dart:collection';
 
-import 'package:json_api_common/src/query/query_parameters.dart';
+import 'package:maybe_just_nothing/maybe_just_nothing.dart';
 
 /// Query parameter defining inclusion of related resources.
 /// @see https://jsonapi.org/format/#fetching-includes
-class Include extends QueryParameters with IterableMixin<String> {
+class Include with ListMixin<String> {
   /// Example:
   /// ```dart
-  /// Include(['comments', 'comments.author']).addTo(url);
+  /// Include(['comments', 'comments.author']);
   /// ```
-  /// encodes into
-  /// ```
-  /// ?include=comments,comments.author
-  /// ```
-  Include(Iterable<String> resources)
-      : _resources = [...resources],
-        super({'include': resources.join(',')});
+  Include([Iterable<String> resources]) {
+    Maybe(resources).ifPresent(addAll);
+  }
 
-  static Include fromUri(Uri uri) =>
-      fromQueryParameters(uri.queryParametersAll);
+  static Include fromUri(Uri uri) => Include(
+      uri.queryParametersAll['include']?.expand((_) => _.split(',')) ?? []);
 
-  static Include fromQueryParameters(Map<String, List<String>> parameters) =>
-      Include((parameters['include']?.expand((_) => _.split(',')) ?? []));
+  final _ = <String>[];
+
+  /// Converts to a map of query parameters
+  Map<String, String> get asQueryParameters => {'include': join(',')};
 
   @override
-  Iterator<String> get iterator => _resources.iterator;
+  Iterator<String> get iterator => _.iterator;
 
-  final List<String> _resources;
+  @override
+  int get length => _.length;
+
+  @override
+  set length(int newLength) => _.length = newLength;
+
+  @override
+  String operator [](int index) => _[index];
+
+  @override
+  void operator []=(int index, String value) => _[index] = value;
 }

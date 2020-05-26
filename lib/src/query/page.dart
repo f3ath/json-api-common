@@ -1,8 +1,10 @@
-import 'package:json_api_common/src/query/query_parameters.dart';
+import 'dart:collection';
+
+import 'package:maybe_just_nothing/maybe_just_nothing.dart';
 
 /// Query parameters defining the pagination data.
 /// @see https://jsonapi.org/format/#fetching-pagination
-class Page extends QueryParameters {
+class Page with MapMixin<String, String> {
   /// Example:
   /// ```dart
   /// Page({'limit': '10', 'offset': '20'}).addTo(url);
@@ -12,23 +14,34 @@ class Page extends QueryParameters {
   /// ?page[limit]=10&page[offset]=20
   /// ```
   ///
-  Page(Map<String, String> parameters)
-      : _parameters = {...parameters},
-        super(parameters.map((k, v) => MapEntry('page[${k}]', v)));
+  Page([Map<String, String> parameters]) {
+    Maybe(parameters).ifPresent(addAll);
+  }
 
-  static Page fromUri(Uri uri) => fromQueryParameters(uri.queryParametersAll);
+  static Page fromUri(Uri uri) => Page(uri.queryParametersAll
+      .map((k, v) => MapEntry(_regex.firstMatch(k)?.group(1), v.last))
+        ..removeWhere((k, v) => k == null));
 
-  static Page fromQueryParameters(Map<String, List<String>> queryParameters) =>
-      Page(queryParameters
-          .map((k, v) => MapEntry(_regex.firstMatch(k)?.group(1), v.last))
-            ..removeWhere((k, v) => k == null));
+  final _ = <String, String>{};
 
-  String operator [](String key) => _parameters[key];
+  /// Converts to a map of query parameters
+  Map<String, String> get asQueryParameters =>
+      _.map((k, v) => MapEntry('page[${k}]', v));
 
-  static final _regex = RegExp(r'^page\[(.+)\]$');
+  @override
+  String operator [](Object key) => _[key];
 
-  bool get isEmpty => _parameters.isEmpty;
+  @override
+  void operator []=(Object key, String value) => _[key] = value;
 
-  bool get isNotEmpty => _parameters.isNotEmpty;
-  final Map<String, String> _parameters;
+  @override
+  void clear() => _.clear();
+
+  @override
+  Iterable<String> get keys => _.keys;
+
+  @override
+  String remove(Object key) => _.remove(key);
 }
+
+final _regex = RegExp(r'^page\[(.+)\]$');

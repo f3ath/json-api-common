@@ -1,40 +1,47 @@
-import 'package:json_api_common/src/query/query_parameters.dart';
+import 'dart:collection';
+
+import 'package:maybe_just_nothing/maybe_just_nothing.dart';
 
 /// Query parameters defining Sparse Fieldsets
 /// @see https://jsonapi.org/format/#fetching-sparse-fieldsets
-class Fields extends QueryParameters {
+class Fields with MapMixin<String, List<String>> {
   /// The [fields] argument maps the resource type to a list of fields.
   ///
   /// Example:
   /// ```dart
-  /// Fields({'articles': ['title', 'body'], 'people': ['name']}).addTo(url);
+  /// Fields({'articles': ['title', 'body'], 'people': ['name']});
   /// ```
-  /// encodes to
-  /// ```
-  /// ?fields[articles]=title,body&fields[people]=name
-  /// ```
-  Fields(Map<String, Iterable<String>> fields)
-      : _fields = {...fields},
-        super(fields.map((k, v) => MapEntry('fields[$k]', v.join(','))));
+  Fields([Map<String, List<String>> fields]) {
+    Maybe(fields).ifPresent(addAll);
+  }
 
   /// Extracts the requested fields from the [uri].
-  static Fields fromUri(Uri uri) => fromQueryParameters(uri.queryParametersAll);
-
-  /// Extracts the requested fields from [queryParameters].
-  static Fields fromQueryParameters(
-          Map<String, Iterable<String>> queryParameters) =>
-      Fields(queryParameters.map((k, v) => MapEntry(
+  static Fields fromUri(Uri uri) =>
+      Fields(uri.queryParametersAll.map((k, v) => MapEntry(
           _regex.firstMatch(k)?.group(1),
           v.expand((_) => _.split(',')).toList()))
         ..removeWhere((k, v) => k == null));
 
-  List<String> operator [](String key) => _fields[key];
+  final _ = <String, List<String>>{};
 
-  bool get isEmpty => _fields.isEmpty;
+  /// Converts to a map of query parameters
+  Map<String, String> get asQueryParameters =>
+      _.map((k, v) => MapEntry('fields[$k]', v.join(',')));
 
-  bool get isNotEmpty => _fields.isNotEmpty;
+  @override
+  void operator []=(String key, List<String> value) => _[key] = value;
 
-  static final _regex = RegExp(r'^fields\[(.+)\]$');
+  @override
+  void clear() => _.clear();
 
-  final Map<String, List<String>> _fields;
+  @override
+  Iterable<String> get keys => _.keys;
+
+  @override
+  List<String> remove(Object key) => _.remove(key);
+
+  @override
+  List<String> operator [](Object key) => _[key];
 }
+
+final _regex = RegExp(r'^fields\[(.+)\]$');

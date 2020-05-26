@@ -1,11 +1,11 @@
-/// Routing determines the design of URLs on the server.
+/// Routurlsermines the design of URLs on the server.
 /// See https://jsonapi.org/recommendations/#urls
-library routing;
+library url_design;
 
-class Routing {
+class UrlDesign {
   /// Creates an instance of Routing. If the [base] URI is provided, it will be used
   /// as a prefix for the generated URIs. Otherwise the prefix will be `/`.
-  Routing([Uri base]) : _base = base ?? Uri(path: '/');
+  UrlDesign([Uri base]) : _base = base ?? Uri(path: '/');
   final Uri _base;
 
   /// Returns a URL for the primary resource collection of type [type].
