@@ -4,14 +4,14 @@ import 'package:json_api_common/src/http/method.dart';
 class HttpRequest {
   HttpRequest(String method, Uri uri,
       {String body, Map<String, String> headers})
-      : this._(method.toUpperCase(), uri, _normalize(headers), body ?? '');
+      : this._(method.toLowerCase(), uri, _normalize(headers), body ?? '');
 
   HttpRequest._(this.method, this.uri, this.headers, this.body);
 
   /// Requested URI
   final Uri uri;
 
-  /// Request method, uppercase
+  /// Request method, lowercase
   final String method;
 
   /// Request body
