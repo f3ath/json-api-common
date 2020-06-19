@@ -8,11 +8,9 @@ on:
 
 jobs:
   linter:
-
     runs-on: ubuntu-latest
     container:
       image:  google/dart:latest
-
     steps:
     - uses: actions/checkout@v2
     - name: Install dependencies
@@ -21,18 +19,17 @@ jobs:
       run: dartanalyzer --fatal-infos --fatal-warnings lib test
       
   test:
-
     runs-on: ubuntu-latest
     strategy:
       matrix:
         version: [latest, '2.8']
         platform: ['vm', 'chrome', 'firefox']
-
     container:
       image:  google/dart:${{ matrix.version }}
-
     steps:
     - uses: actions/checkout@v2
+    - name: Install Browsers
+      run: sudo apt intall chrome firefox  
     - name: Install dependencies
       run: pub get
     - name: Run tests
