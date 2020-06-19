@@ -28,8 +28,6 @@ jobs:
       image:  google/dart:${{ matrix.version }}
     steps:
     - uses: actions/checkout@v2
-    - name: Install Browsers
-      run: apt install google-chrome-stable firefox-esr
     - name: Install dependencies
       run: pub get
     - name: Run tests
