@@ -9,9 +9,9 @@ on:
 jobs:
   linter:
     runs-on: ubuntu-latest
-    container:
-      image:  google/dart:latest
     steps:
+    - name: Install dart
+      run: apt-get install dart
     - uses: actions/checkout@v2
     - name: Install dependencies
       run: pub get
@@ -22,11 +22,10 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        version: [latest, '2.8']
         platform: ['vm', 'chrome', 'firefox']
-    container:
-      image:  google/dart:${{ matrix.version }}
     steps:
+    - name: Install dart
+      run: apt-get install dart
     - uses: actions/checkout@v2
     - name: Install dependencies
       run: pub get
