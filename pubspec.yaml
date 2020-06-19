@@ -5,7 +5,7 @@ description: JSON:API for Dart. Common parts. See http://jsonapi.org
 environment:
   sdk: '>=2.6.0 <3.0.0'
 dependencies:
-  maybe_just_nothing: ^0.1.0
+  maybe_just_nothing: ^0.1.8
 dev_dependencies:
   pedantic: ^1.9.0
   test: ^1.9.2

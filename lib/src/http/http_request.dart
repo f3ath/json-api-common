@@ -1,5 +1,3 @@
-import 'package:json_api_common/src/http/method.dart';
-
 /// The request which is sent by the client and received by the server
 class HttpRequest {
   HttpRequest(String method, Uri uri,
@@ -29,13 +27,13 @@ class HttpRequest {
 
   HttpRequest withUri(Uri uri) => HttpRequest._(method, uri, headers, body);
 
-  bool get isGet => method == Method.GET;
+  bool get isGet => method == 'get';
 
-  bool get isPost => method == Method.POST;
+  bool get isPost => method == 'post';
 
-  bool get isDelete => method == Method.DELETE;
+  bool get isDelete => method == 'delete';
 
-  bool get isPatch => method == Method.PATCH;
+  bool get isPatch => method == 'patch';
 
-  bool get isOptions => method == Method.OPTIONS;
+  bool get isOptions => method == 'options';
 }

@@ -1,9 +1,5 @@
-/// Routurlsermines the design of URLs on the server.
-/// See https://jsonapi.org/recommendations/#urls
-library url_design;
-
 class UrlDesign {
-  /// Creates an instance of Routing. If the [base] URI is provided, it will be used
+  /// Creates an instance of UrlDesign. If the [base] URI is provided, it will be used
   /// as a prefix for the generated URIs. Otherwise the prefix will be `/`.
   UrlDesign([Uri base]) : _base = base ?? Uri(path: '/');
   final Uri _base;
