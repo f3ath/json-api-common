@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Install dart
-      run: apt-get install dart
+      run: sudo apt-get install dart
     - uses: actions/checkout@v2
     - name: Install dependencies
       run: pub get
@@ -25,7 +25,7 @@ jobs:
         platform: ['vm', 'chrome', 'firefox']
     steps:
     - name: Install dart
-      run: apt-get install dart
+      run: sudo apt-get install dart
     - uses: actions/checkout@v2
     - name: Install dependencies
       run: pub get
