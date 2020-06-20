@@ -7,27 +7,21 @@ on:
     branches: [ master ]
 
 jobs:
-  linter:
+  build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        version: [latest, '2.8']
+        platform: ['vm', 'chrome']
+    container:
+      image:  google/dart:${{ matrix.version }}
     steps:
-    - name: Install dart
-      run: sudo apt-get install dart
     - uses: actions/checkout@v2
+    - run: wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+    - run: sudo dpkg -i google-chrome*.deb
     - name: Install dependencies
       run: pub get
     - name: Linter
       run: dartanalyzer --fatal-infos --fatal-warnings lib test
-      
-  test:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        platform: ['vm', 'chrome', 'firefox']
-    steps:
-    - name: Install dart
-      run: sudo apt-get install dart
-    - uses: actions/checkout@v2
-    - name: Install dependencies
-      run: pub get
-    - name: Run tests
+    - name: Tests
       run: pub run test --platform ${{ matrix.platform }}
