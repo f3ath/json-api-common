@@ -1,36 +1,39 @@
+import 'package:json_api_common/src/document/base_resource.dart';
 import 'package:json_api_common/src/document/relationship.dart';
-import 'package:maybe_just_nothing/maybe_just_nothing.dart';
 
-class NewResource {
+/// A new (to-be-created) resource which does not yet have the id.
+class NewResource extends BaseResource {
   NewResource(this.type,
-      {Map<String, Object> meta = const {},
-      Map<String, Object> attributes = const {},
-      Map<String, Relationship> relationships = const {}})
-      : meta = Map.unmodifiable(meta ?? {}),
-        relationships = Map.unmodifiable(relationships ?? {}),
-        attributes = Map.unmodifiable(attributes ?? {});
+      {Map<String, dynamic>? meta,
+      Map<String, dynamic>? attributes,
+      Map<String, Relationship>? relationships}) {
+    ArgumentError.checkNotNull(type);
+    this.meta.addAll(meta ?? {});
+    this.relationships.addAll(relationships ?? {});
+    this.attributes.addAll(attributes ?? {});
+  }
 
   static NewResource fromJson(dynamic json) {
     if (json is Map) {
-      return NewResource(
-          Maybe(json['type'])
-              .cast<String>()
-              .orThrow(() => FormatException('Invalid resource type')),
-          attributes: Maybe(json['attributes']).cast<Map>().or(const {}),
-          relationships: Maybe(json['relationships'])
-              .cast<Map>()
-              .map((t) => t.map((key, value) =>
-                  MapEntry(key.toString(), Relationship.fromJson(value))))
-              .orGet(() => {}),
-          meta: json['meta']);
+      final type = json['type'];
+      final attributes = json['attributes'] ?? <String, dynamic>{};
+      final relationships = json['relationships'] ?? <String, dynamic>{};
+      final meta = json['meta'] ?? <String, dynamic>{};
+      if (type is String &&
+          attributes is Map<String, dynamic> &&
+          relationships is Map &&
+          meta is Map<String, dynamic>) {
+        return NewResource(type,
+            attributes: attributes,
+            relationships: Relationship.mapFromJson(relationships),
+            meta: meta);
+      }
     }
-    throw FormatException('A JSON:API resource must be a JSON object');
+    throw FormatException('Invalid JSON');
   }
 
+  /// Resource type
   final String type;
-  final Map<String, Object> meta;
-  final Map<String, Object> attributes;
-  final Map<String, Relationship> relationships;
 
   Map<String, Object> toJson() => {
         'type': type,

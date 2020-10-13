@@ -5,8 +5,8 @@ void main() {
   test('Logging handler can log', () async {
     final rq = HttpRequest('get', Uri.parse('http://localhost'));
     final rs = HttpResponse(200, body: 'Hello');
-    HttpRequest loggedRq;
-    HttpResponse loggedRs;
+    HttpRequest? loggedRq;
+    HttpResponse? loggedRs;
     final logger = LoggingHttpHandler(
         HttpHandler.fromFunction(((_) async => rs)),
         onResponse: (_) => loggedRs = _,

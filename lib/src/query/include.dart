@@ -1,16 +1,14 @@
 import 'dart:collection';
 
-import 'package:maybe_just_nothing/maybe_just_nothing.dart';
-
 /// Query parameter defining inclusion of related resources.
 /// @see https://jsonapi.org/format/#fetching-includes
-class Include with ListMixin<String> {
+class Include with IterableMixin<String> {
   /// Example:
   /// ```dart
   /// Include(['comments', 'comments.author']);
   /// ```
-  Include([Iterable<String> resources]) {
-    Maybe(resources).ifPresent(addAll);
+  Include([Iterable<String> resources = const []]) {
+    _.addAll(resources);
   }
 
   static Include fromUri(Uri uri) => Include(
@@ -26,13 +24,4 @@ class Include with ListMixin<String> {
 
   @override
   int get length => _.length;
-
-  @override
-  set length(int newLength) => _.length = newLength;
-
-  @override
-  String operator [](int index) => _[index];
-
-  @override
-  void operator []=(int index, String value) => _[index] = value;
 }

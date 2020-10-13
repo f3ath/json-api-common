@@ -1,9 +1,10 @@
+import 'package:json_api_common/src/http/headers.dart';
+
 /// The response sent by the server and received by the client
 class HttpResponse {
-  HttpResponse(this.statusCode, {String body, Map<String, String> headers})
-      : headers = Map.unmodifiable(
-            (headers ?? {}).map((k, v) => MapEntry(k.toLowerCase(), v))),
-        body = body ?? '';
+  HttpResponse(this.statusCode, {this.body = '', Map<String, String>? headers}) {
+    this.headers.addAll(headers ?? {});
+  }
 
   /// Response status code
   final int statusCode;
@@ -11,6 +12,6 @@ class HttpResponse {
   /// Response body
   final String body;
 
-  /// Response headers. Unmodifiable. Lowercase keys
-  final Map<String, String> headers;
+  /// Response headers. Lowercase keys
+  final headers = Headers();
 }

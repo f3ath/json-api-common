@@ -1,5 +1,5 @@
+import 'package:json_api_common/src/document/error_source.dart';
 import 'package:json_api_common/src/document/link.dart';
-import 'package:maybe_just_nothing/maybe_just_nothing.dart';
 
 /// [ErrorObject] represents an error occurred on the server.
 ///
@@ -10,74 +10,81 @@ class ErrorObject {
   /// passed through the [links['about']] argument takes precedence and will overwrite
   /// the `about` key in [links].
   ErrorObject({
-    String id = '',
-    String status = '',
-    String code = '',
-    String title = '',
-    String detail = '',
-    Map<String, Object> meta = const {},
-    String sourceParameter = '',
-    String sourcePointer = '',
-    Map<String, Link> links = const {},
+    String? id,
+    String? status,
+    String? code,
+    String? title,
+    String? detail,
+    Map<String, Object?>? meta,
+    String? sourceParameter,
+    String? sourcePointer,
+    Map<String, Link>? links,
   })  : id = id ?? '',
         status = status ?? '',
         code = code ?? '',
         title = title ?? '',
-        detail = detail ?? '',
-        sourcePointer = sourcePointer ?? '',
-        sourceParameter = sourceParameter ?? '',
-        meta = Map.unmodifiable(meta ?? {}),
-        links = Map.unmodifiable(links ?? {});
+        detail = detail ?? '' {
+    this.meta.addAll(meta ?? {});
+    this.links.addAll(links ?? {});
+    source.parameter = sourceParameter ?? '';
+    source.pointer = sourcePointer ?? '';
+  }
 
   static ErrorObject fromJson(dynamic json) {
     if (json is Map) {
-      final source = Maybe(json['source']).cast<Map>().or(const {});
-      return ErrorObject(
-          id: Maybe(json['id']).cast<String>().or(''),
-          status: Maybe(json['status']).cast<String>().or(''),
-          code: Maybe(json['code']).cast<String>().or(''),
-          title: Maybe(json['title']).cast<String>().or(''),
-          detail: Maybe(json['detail']).cast<String>().or(''),
-          sourceParameter: Maybe(source['parameter']).cast<String>().or(''),
-          sourcePointer: Maybe(source['pointer']).cast<String>().or(''),
-          meta: Maybe(json['meta']).cast<Map<String, Object>>().or(const {}),
-          links: Link.mapFromJson(json['links']));
+      try {
+        final source = ErrorSource.fromJson(json['source'] ?? {});
+        return ErrorObject(
+            id: json['id'],
+            status: json['status'],
+            code: json['code'],
+            title: json['title'],
+            detail: json['detail'],
+            sourcePointer: source.pointer,
+            sourceParameter: source.parameter,
+            meta: json['meta'] ?? {},
+            links: Link.mapFromJson(json['links'] ?? {}));
+      } on TypeError catch (e) {
+        throw FormatException('Invalid JSON: $e');
+      }
     }
-    throw FormatException('A JSON:API error must be a JSON object');
+    throw FormatException('Invalid JSON');
   }
 
   /// A unique identifier for this particular occurrence of the problem.
-  /// May be empty.
-  final String id;
+  String id;
 
   /// The HTTP status code applicable to this problem, expressed as a string value.
-  /// May be empty.
-  final String status;
+  String status;
 
   /// An application-specific error code, expressed as a string value.
-  /// May be empty.
-  final String code;
+  String code;
 
   /// A short, human-readable summary of the problem that SHOULD NOT change
   /// from occurrence to occurrence of the problem, except for purposes of localization.
-  /// May be empty.
-  final String title;
+  String title;
 
   /// A human-readable explanation specific to this occurrence of the problem.
   /// Like title, this field’s value can be localized.
-  /// May be empty.
-  final String detail;
-
-  /// A JSON Pointer (RFC6901) to the associated entity in the request document,
-  ///   e.g. "/data" for a primary data object, or "/data/attributes/title" for a specific attribute.
-  final String sourcePointer;
-
-  /// A string indicating which URI query parameter caused the error.
-  final String sourceParameter;
+  String detail;
 
   /// Meta data.
-  final Map<String, Object> meta;
+  final meta = <String, Object?>{};
 
-  /// Error links. May be empty.
-  final Map<String, Link> links;
+  /// Error source.
+  final source = ErrorSource();
+
+  /// Error links.
+  final links = <String, Link>{};
+
+  Map<String, Object> toJson() => {
+        if (id.isNotEmpty) 'id': id,
+        if (status.isNotEmpty) 'status': status,
+        if (code.isNotEmpty) 'code': code,
+        if (title.isNotEmpty) 'title': title,
+        if (detail.isNotEmpty) 'detail': detail,
+        if (source.isNotEmpty) 'source': source,
+        if (links.isNotEmpty) 'links': links,
+        if (meta.isNotEmpty) 'meta': meta,
+      };
 }

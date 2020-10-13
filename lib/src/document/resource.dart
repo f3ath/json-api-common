@@ -1,54 +1,57 @@
+import 'package:json_api_common/src/document/base_resource.dart';
 import 'package:json_api_common/src/document/identity.dart';
 import 'package:json_api_common/src/document/link.dart';
-import 'package:json_api_common/src/document/new_resource.dart';
 import 'package:json_api_common/src/document/relationship.dart';
-import 'package:maybe_just_nothing/maybe_just_nothing.dart';
 
-class Resource extends NewResource with Identity {
+class Resource extends BaseResource with Identity {
   Resource(this.type, this.id,
-      {Map<String, Link> links = const {},
-      Map<String, Object> meta = const {},
-      Map<String, Object> attributes = const {},
-      Map<String, Relationship> relationships = const {}})
-      : links = Map.unmodifiable(links ?? {}),
-        super(type,
-            attributes: attributes, relationships: relationships, meta: meta);
+      {Map<String, Link>? links,
+      Map<String, Object>? meta,
+      Map<String, Object>? attributes,
+      Map<String, Relationship>? relationships})
+      : super(
+            attributes: attributes, relationships: relationships, meta: meta) {
+    this.links.addAll(links ?? {});
+  }
 
   static Resource fromJson(dynamic json) {
     if (json is Map) {
-      return Resource(
-          Maybe(json['type'])
-              .cast<String>()
-              .orThrow(() => FormatException('Invalid resource type')),
-          Maybe(json['id'])
-              .cast<String>()
-              .orThrow(() => FormatException('Invalid resource id')),
-          attributes: Maybe(json['attributes']).cast<Map>().or(const {}),
-          relationships: Maybe(json['relationships'])
-              .cast<Map>()
-              .map((t) => t.map((key, value) =>
-                  MapEntry(key.toString(), Relationship.fromJson(value))))
-              .orGet(() => {}),
-          links: Link.mapFromJson(json['links']),
-          meta: json['meta']);
+      final type = json['type'];
+      final id = json['id'];
+      final attributes = json['attributes'] ?? <String, Object>{};
+      final relationships = json['relationships'] ?? <String, Object>{};
+      final links = json['links'] ?? <String, Object>{};
+      final meta = json['meta'] ?? <String, Object>{};
+      if (type is String &&
+          id is String &&
+          attributes is Map<String, Object> &&
+          relationships is Map &&
+          links is Map &&
+          meta is Map<String, Object>) {
+        return Resource(type, id,
+            attributes: attributes,
+            relationships: Relationship.mapFromJson(relationships),
+            links: Link.mapFromJson(links),
+            meta: meta);
+      }
     }
-    throw FormatException('A JSON:API resource must be a JSON object');
+    throw FormatException('Invalid JSON');
   }
 
   @override
   final String type;
+
   @override
   final String id;
-  final Map<String, Link> links;
 
-  Maybe<Many> many(String key) => Maybe(relationships[key]).cast<Many>();
+  final links = <String, Link>{};
 
-  Maybe<One> one(String key) => Maybe(relationships[key]).cast<One>();
-
-  @override
   Map<String, Object> toJson() => {
+        'type': type,
         'id': id,
-        ...super.toJson(),
+        if (attributes.isNotEmpty) 'attributes': attributes,
+        if (relationships.isNotEmpty) 'relationships': relationships,
+        if (meta.isNotEmpty) 'meta': meta,
         if (links.isNotEmpty) 'links': links,
       };
 }

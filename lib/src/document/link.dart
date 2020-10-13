@@ -1,46 +1,45 @@
-import 'package:maybe_just_nothing/maybe_just_nothing.dart';
-
 /// A JSON:API link
 /// https://jsonapi.org/format/#document-links
 class Link {
-  Link(this.uri, {Map<String, Object> meta = const {}})
-      : meta = Map.unmodifiable(meta ?? const {}) {
-    ArgumentError.checkNotNull(uri, 'uri');
+  Link(this.uri, {Map<String, dynamic>? meta}) {
+    this.meta.addAll(meta ?? {});
   }
 
+  /// Link URL
   final Uri uri;
-  final Map<String, Object> meta;
 
-  /// Reconstructs the link from the [json] object
+  /// Link meta data
+  final meta = <String, dynamic>{};
+
+  /// Decodes Link from [json]. Returns the decoded object.
+  /// If the [json] has incorrect format, throws  [FormatException].
   static Link fromJson(dynamic json) {
     if (json is String) return Link(Uri.parse(json));
     if (json is Map) {
-      return Link(
-          Maybe(json['href']).cast<String>().map(Uri.parse).orGet(() => Uri()),
-          meta: Maybe(json['meta']).cast<Map>().or(const {}));
+      final meta = json['meta'] ?? <String, dynamic>{};
+      if (meta is Map<String, dynamic>) {
+        try {
+          return Link(Uri.parse(json['href']), meta: meta);
+        } on TypeError catch (e) {
+          throw FormatException('Invalid JSON: $e');
+        }
+      }
     }
-    throw FormatException(
-        'A JSON:API link must be a JSON string or a JSON object');
+    throw FormatException('Invalid JSON');
   }
 
-  /// Reconstructs the document's `links` member into a map.
-  /// Details on the `links` member: https://jsonapi.org/format/#document-links
-  static Map<String, Link> mapFromJson(dynamic json) => Maybe(json)
-      .cast<Map>()
-      .map((_) => _.map((k, v) => MapEntry(k.toString(), Link.fromJson(v))))
-      .or(const {});
+  /// Decodes a map of [Link] from [json]. Returns the decoded object.
+  /// If the [json] has incorrect format, throws  [FormatException].
+  static Map<String, Link> mapFromJson(dynamic json) {
+    if (json is Map) {
+      return json.map((k, v) => MapEntry(k.toString(), Link.fromJson(v)));
+    }
+    throw FormatException('Invalid JSON');
+  }
 
   @override
   String toString() => uri.toString();
 
-  Object toJson() {
-    final href = uri.toString();
-    if (meta.isNotEmpty) {
-      return {
-        if (href.isNotEmpty) 'href': href,
-        'meta': meta,
-      };
-    }
-    return href;
-  }
+  Object toJson() =>
+      meta.isNotEmpty ? {'href': uri.toString(), 'meta': meta} : uri.toString();
 }

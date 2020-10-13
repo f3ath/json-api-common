@@ -10,10 +10,10 @@ class LoggingHttpHandler implements HttpHandler {
   final HttpHandler wrapped;
 
   /// This function will be called before the request is sent
-  final void Function(HttpRequest) onRequest;
+  final void Function(HttpRequest)? onRequest;
 
   /// This function will be called after the response is received
-  final void Function(HttpResponse) onResponse;
+  final void Function(HttpResponse)? onResponse;
 
   @override
   Future<HttpResponse> call(HttpRequest request) async {

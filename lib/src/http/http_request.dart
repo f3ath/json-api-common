@@ -1,10 +1,18 @@
+import 'package:json_api_common/src/http/headers.dart';
+
 /// The request which is sent by the client and received by the server
 class HttpRequest {
-  HttpRequest(String method, Uri uri,
-      {String body, Map<String, String> headers})
-      : this._(method.toLowerCase(), uri, _normalize(headers), body ?? '');
+  HttpRequest(String method, this.uri,
+      {this.body = '', Map<String, String>? headers})
+      : method = method.toLowerCase() {
+    this.headers.addAll(headers ?? {});
+  }
 
-  HttpRequest._(this.method, this.uri, this.headers, this.body);
+  static const get = 'get';
+  static const post = 'post';
+  static const delete = 'delete';
+  static const patch = 'patch';
+  static const options = 'options';
 
   /// Requested URI
   final Uri uri;
@@ -15,25 +23,16 @@ class HttpRequest {
   /// Request body
   final String body;
 
-  /// Request headers. Unmodifiable. Lowercase keys
-  final Map<String, String> headers;
+  /// Request headers. Lowercase keys
+  final headers = Headers();
 
-  static Map<String, String> _normalize(Map<String, String> headers) =>
-      Map.unmodifiable(
-          (headers ?? {}).map((k, v) => MapEntry(k.toLowerCase(), v)));
+  bool get isGet => method == get;
 
-  HttpRequest withHeaders(Map<String, String> headers) =>
-      HttpRequest._(method, uri, _normalize(headers), body);
+  bool get isPost => method == post;
 
-  HttpRequest withUri(Uri uri) => HttpRequest._(method, uri, headers, body);
+  bool get isDelete => method == delete;
 
-  bool get isGet => method == 'get';
+  bool get isPatch => method == patch;
 
-  bool get isPost => method == 'post';
-
-  bool get isDelete => method == 'delete';
-
-  bool get isPatch => method == 'patch';
-
-  bool get isOptions => method == 'options';
+  bool get isOptions => method == options;
 }

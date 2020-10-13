@@ -1,7 +1,5 @@
 import 'dart:collection';
 
-import 'package:maybe_just_nothing/maybe_just_nothing.dart';
-
 /// Query parameters defining the pagination data.
 /// @see https://jsonapi.org/format/#fetching-pagination
 class Page with MapMixin<String, String> {
@@ -14,13 +12,13 @@ class Page with MapMixin<String, String> {
   /// ?page[limit]=10&page[offset]=20
   /// ```
   ///
-  Page([Map<String, String> parameters]) {
-    Maybe(parameters).ifPresent(addAll);
+  Page([Map<String, String> parameters = const {}]) {
+    addAll(parameters);
   }
 
   static Page fromUri(Uri uri) => Page(uri.queryParametersAll
-      .map((k, v) => MapEntry(_regex.firstMatch(k)?.group(1), v.last))
-        ..removeWhere((k, v) => k == null));
+      .map((k, v) => MapEntry(_regex.firstMatch(k)?.group(1) ?? '', v.last))
+        ..removeWhere((k, v) => k.isEmpty));
 
   final _ = <String, String>{};
 
@@ -29,10 +27,10 @@ class Page with MapMixin<String, String> {
       _.map((k, v) => MapEntry('page[${k}]', v));
 
   @override
-  String operator [](Object key) => _[key];
+  String? operator [](Object? key) => _[key];
 
   @override
-  void operator []=(Object key, String value) => _[key] = value;
+  void operator []=(String key, String value) => _[key] = value;
 
   @override
   void clear() => _.clear();
@@ -41,7 +39,7 @@ class Page with MapMixin<String, String> {
   Iterable<String> get keys => _.keys;
 
   @override
-  String remove(Object key) => _.remove(key);
+  String? remove(Object? key) => _.remove(key);
 }
 
 final _regex = RegExp(r'^page\[(.+)\]$');
