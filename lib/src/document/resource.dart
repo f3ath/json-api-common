@@ -6,36 +6,12 @@ import 'package:json_api_common/src/document/relationship.dart';
 class Resource extends BaseResource with Identity {
   Resource(this.type, this.id,
       {Map<String, Link>? links,
-      Map<String, Object>? meta,
-      Map<String, Object>? attributes,
+      Map<String, Object?>? meta,
+      Map<String, Object?>? attributes,
       Map<String, Relationship>? relationships})
       : super(
             attributes: attributes, relationships: relationships, meta: meta) {
     this.links.addAll(links ?? {});
-  }
-
-  static Resource fromJson(dynamic json) {
-    if (json is Map) {
-      final type = json['type'];
-      final id = json['id'];
-      final attributes = json['attributes'] ?? <String, Object>{};
-      final relationships = json['relationships'] ?? <String, Object>{};
-      final links = json['links'] ?? <String, Object>{};
-      final meta = json['meta'] ?? <String, Object>{};
-      if (type is String &&
-          id is String &&
-          attributes is Map<String, Object> &&
-          relationships is Map &&
-          links is Map &&
-          meta is Map<String, Object>) {
-        return Resource(type, id,
-            attributes: attributes,
-            relationships: Relationship.mapFromJson(relationships),
-            links: Link.mapFromJson(links),
-            meta: meta);
-      }
-    }
-    throw FormatException('Invalid JSON');
   }
 
   @override

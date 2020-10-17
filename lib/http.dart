@@ -1,6 +1,7 @@
 /// This is a thin HTTP layer abstraction used by the client and the server.
 library http;
 
+export 'package:json_api_common/src/http/content_type.dart';
 export 'package:json_api_common/src/http/headers.dart';
 export 'package:json_api_common/src/http/http_handler.dart';
 export 'package:json_api_common/src/http/http_request.dart';

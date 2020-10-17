@@ -2,16 +2,6 @@
 class ErrorSource {
   ErrorSource({this.pointer = '', this.parameter = ''});
 
-  /// Decodes ErrorSource from [json]. Returns the decoded object.
-  /// If the [json] has incorrect format, throws  [FormatException].
-  static ErrorSource fromJson(dynamic json) {
-    if (json is Map) {
-      return ErrorSource(
-          pointer: json['pointer'] ?? '', parameter: json['parameter'] ?? '');
-    }
-    throw FormatException('A JSON:API error source must be a JSON object');
-  }
-
   /// A JSON Pointer [RFC6901] to the associated entity in the request document.
   String pointer;
 

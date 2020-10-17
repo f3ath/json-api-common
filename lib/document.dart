@@ -1,5 +1,6 @@
 library document;
 
+export 'package:json_api_common/src/document/document.dart';
 export 'package:json_api_common/src/document/error_object.dart';
 export 'package:json_api_common/src/document/identifier.dart';
 export 'package:json_api_common/src/document/identity.dart';

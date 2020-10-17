@@ -30,27 +30,6 @@ class ErrorObject {
     source.pointer = sourcePointer ?? '';
   }
 
-  static ErrorObject fromJson(dynamic json) {
-    if (json is Map) {
-      try {
-        final source = ErrorSource.fromJson(json['source'] ?? {});
-        return ErrorObject(
-            id: json['id'],
-            status: json['status'],
-            code: json['code'],
-            title: json['title'],
-            detail: json['detail'],
-            sourcePointer: source.pointer,
-            sourceParameter: source.parameter,
-            meta: json['meta'] ?? {},
-            links: Link.mapFromJson(json['links'] ?? {}));
-      } on TypeError catch (e) {
-        throw FormatException('Invalid JSON: $e');
-      }
-    }
-    throw FormatException('Invalid JSON');
-  }
-
   /// A unique identifier for this particular occurrence of the problem.
   String id;
 

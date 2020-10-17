@@ -2,8 +2,8 @@ import 'package:json_api_common/src/document/relationship.dart';
 
 abstract class BaseResource {
   BaseResource(
-      {Map<String, dynamic>? meta,
-      Map<String, dynamic>? attributes,
+      {Map<String, Object?>? meta,
+      Map<String, Object?>? attributes,
       Map<String, Relationship>? relationships}) {
     this.meta.addAll(meta ?? {});
     this.relationships.addAll(relationships ?? {});
@@ -11,12 +11,12 @@ abstract class BaseResource {
   }
 
   /// Resource meta data.
-  final meta = <String, dynamic>{};
+  final meta = <String, Object?>{};
 
   /// Resource attributes.
   ///
   /// See https://jsonapi.org/format/#document-resource-object-attributes
-  final attributes = <String, dynamic>{};
+  final attributes = <String, Object?>{};
 
   /// Resource relationships.
   ///
