@@ -1,0 +1,23 @@
+import 'package:json_api_common/query.dart';
+import 'package:test/test.dart';
+
+void main() {
+  test('emptiness', () {
+    expect(Filter().isEmpty, isTrue);
+    expect(Filter().isNotEmpty, isFalse);
+    expect(Filter({'foo': 'bar'}).isEmpty, isFalse);
+    expect(Filter({'foo': 'bar'}).isNotEmpty, isTrue);
+  });
+
+  test('Can decode url', () {
+    final uri = Uri.parse('/articles?filter[post]=1,2&filter[author]=12');
+    final filter = Filter.fromUri(uri);
+    expect(filter['post'], '1,2');
+    expect(filter['author'], '12');
+  });
+
+  test('Can convert to query parameters', () {
+    expect(Filter({'post': '1,2', 'author': '12'}).asQueryParameters,
+        {'filter[post]': '1,2', 'filter[author]': '12'});
+  });
+}

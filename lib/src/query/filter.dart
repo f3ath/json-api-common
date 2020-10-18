@@ -1,22 +1,19 @@
 import 'dart:collection';
 
-/// Query parameters defining the pagination data.
-/// @see https://jsonapi.org/format/#fetching-pagination
-class Page with MapMixin<String, String> {
+class Filter with MapMixin<String, String> {
   /// Example:
   /// ```dart
-  /// Page({'limit': '10', 'offset': '20'}).addTo(url);
+  /// Filter({'post': '1,2', 'author': '12'}).addTo(url);
   /// ```
   /// encodes into
   /// ```
-  /// ?page[limit]=10&page[offset]=20
+  /// ?filter[post]=1,2&filter[author]=12
   /// ```
-  ///
-  Page([Map<String, String>? parameters]) {
+  Filter([Map<String, String>? parameters]) {
     addAll(parameters ?? {});
   }
 
-  static Page fromUri(Uri uri) => Page(uri.queryParametersAll
+  static Filter fromUri(Uri uri) => Filter(uri.queryParametersAll
       .map((k, v) => MapEntry(_regex.firstMatch(k)?.group(1) ?? '', v.last))
         ..removeWhere((k, v) => k.isEmpty));
 
@@ -24,7 +21,7 @@ class Page with MapMixin<String, String> {
 
   /// Converts to a map of query parameters
   Map<String, String> get asQueryParameters =>
-      _.map((k, v) => MapEntry('page[${k}]', v));
+      _.map((k, v) => MapEntry('filter[${k}]', v));
 
   @override
   String? operator [](Object? key) => _[key];
@@ -42,4 +39,4 @@ class Page with MapMixin<String, String> {
   String? remove(Object? key) => _.remove(key);
 }
 
-final _regex = RegExp(r'^page\[(.+)\]$');
+final _regex = RegExp(r'^filter\[(.+)\]$');
