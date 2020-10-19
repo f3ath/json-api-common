@@ -9,25 +9,20 @@ class ErrorObject {
   /// The [links] map may contain custom links. The about link
   /// passed through the [links['about']] argument takes precedence and will overwrite
   /// the `about` key in [links].
-  ErrorObject({
-    String? id,
-    String? status,
-    String? code,
-    String? title,
-    String? detail,
-    Map<String, Object?>? meta,
-    String? sourceParameter,
-    String? sourcePointer,
-    Map<String, Link>? links,
-  })  : id = id ?? '',
-        status = status ?? '',
-        code = code ?? '',
-        title = title ?? '',
-        detail = detail ?? '' {
-    this.meta.addAll(meta ?? {});
-    this.links.addAll(links ?? {});
-    source.parameter = sourceParameter ?? '';
-    source.pointer = sourcePointer ?? '';
+  ErrorObject(
+      {this.id = '',
+      this.status = '',
+      this.code = '',
+      this.title = '',
+      this.detail = '',
+      Map<String, Object /*?*/ > meta = const {},
+      String sourceParameter = '',
+      String sourcePointer = '',
+      Map<String, Link> links = const {}}) {
+    this.meta.addAll(meta);
+    this.links.addAll(links);
+    source.parameter = sourceParameter;
+    source.pointer = sourcePointer;
   }
 
   /// A unique identifier for this particular occurrence of the problem.
@@ -48,7 +43,7 @@ class ErrorObject {
   String detail;
 
   /// Meta data.
-  final meta = <String, Object?>{};
+  final meta = <String, Object/*?*/>{};
 
   /// Error source.
   final source = ErrorSource();

@@ -4,6 +4,6 @@ linter:
     - sort_constructors_first
     - sort_unnamed_constructors_first
 
-analyzer:
-  enable-experiment:
-    - non-nullable
+#analyzer:
+#  enable-experiment:
+#    - non-nullable

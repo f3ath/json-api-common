@@ -1,25 +1,20 @@
 import 'package:json_api_common/src/http/http_handler.dart';
+import 'package:json_api_common/src/http/http_logger.dart';
 import 'package:json_api_common/src/http/http_request.dart';
 import 'package:json_api_common/src/http/http_response.dart';
 
 /// A wrapper over [HttpHandler] which allows logging
 class LoggingHttpHandler implements HttpHandler {
-  LoggingHttpHandler(this.wrapped, {this.onRequest, this.onResponse});
+  LoggingHttpHandler(this._handler, this._logger);
 
-  /// The wrapped handler
-  final HttpHandler wrapped;
-
-  /// This function will be called before the request is sent
-  final void Function(HttpRequest)? onRequest;
-
-  /// This function will be called after the response is received
-  final void Function(HttpResponse)? onResponse;
+  final HttpHandler _handler;
+  final HttpLogger _logger;
 
   @override
   Future<HttpResponse> call(HttpRequest request) async {
-    onRequest?.call(request);
-    final response = await wrapped(request);
-    onResponse?.call(response);
+    _logger.onRequest(request);
+    final response = await _handler(request);
+    _logger.onResponse(response);
     return response;
   }
 }

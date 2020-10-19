@@ -11,7 +11,7 @@ class Headers with MapMixin<String, String> {
   final _map = <String, String>{};
 
   @override
-  String? operator [](Object? key) =>
+  String /*?*/ operator [](Object /*?*/ key) =>
       key is String ? _map[key.toLowerCase()] : null;
 
   @override
@@ -25,7 +25,7 @@ class Headers with MapMixin<String, String> {
   Iterable<String> get keys => _map.keys;
 
   @override
-  String? remove(Object? key) =>
+  String /*?*/ remove(Object /*?*/ key) =>
       _map.remove(key is String ? key.toLowerCase() : key);
 
   /// Returns the headers as a map

@@ -12,13 +12,14 @@ class Page with MapMixin<String, String> {
   /// ?page[limit]=10&page[offset]=20
   /// ```
   ///
-  Page([Map<String, String>? parameters]) {
-    addAll(parameters ?? {});
+  Page([Map<String, String> parameters = const {}]) {
+    addAll(parameters);
   }
 
   static Page fromUri(Uri uri) => Page(uri.queryParametersAll
       .map((k, v) => MapEntry(_regex.firstMatch(k)?.group(1) ?? '', v.last))
         ..removeWhere((k, v) => k.isEmpty));
+  static final _regex = RegExp(r'^page\[(.+)\]$');
 
   final _ = <String, String>{};
 
@@ -27,7 +28,7 @@ class Page with MapMixin<String, String> {
       _.map((k, v) => MapEntry('page[${k}]', v));
 
   @override
-  String? operator [](Object? key) => _[key];
+  String /*?*/ operator [](Object /*?*/ key) => _[key];
 
   @override
   void operator []=(String key, String value) => _[key] = value;
@@ -39,7 +40,5 @@ class Page with MapMixin<String, String> {
   Iterable<String> get keys => _.keys;
 
   @override
-  String? remove(Object? key) => _.remove(key);
+  String /*?*/ remove(Object /*?*/ key) => _.remove(key);
 }
-
-final _regex = RegExp(r'^page\[(.+)\]$');

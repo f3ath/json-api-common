@@ -1,16 +1,16 @@
 import 'package:json_api_common/src/document/base_resource.dart';
 import 'package:json_api_common/src/document/relationship.dart';
 
-/// A new (to-be-created) resource which does not yet have the id.
+/// A new (to-be-created) resource which does not have the id yet.
 class NewResource extends BaseResource {
   NewResource(this.type,
-      {Map<String, Object?>? meta,
-      Map<String, Object?>? attributes,
-      Map<String, Relationship>? relationships}) {
+      {Map<String, Object /*?*/ > meta = const {},
+      Map<String, Object /*?*/ > attributes = const {},
+      Map<String, Relationship> relationships = const {}}) {
     ArgumentError.checkNotNull(type);
-    this.meta.addAll(meta ?? {});
-    this.relationships.addAll(relationships ?? {});
-    this.attributes.addAll(attributes ?? {});
+    this.meta.addAll(meta);
+    this.relationships.addAll(relationships);
+    this.attributes.addAll(attributes);
   }
 
   /// Resource type

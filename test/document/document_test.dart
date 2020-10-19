@@ -69,8 +69,8 @@ void main() {
         doc
             .asResourceCollection()
             .first
-            .relationships['author']!
-            .links['self']!
+            .relationships['author']
+            .links['self']
             .uri
             .toString(),
         'http://example.com/articles/1/relationships/author');

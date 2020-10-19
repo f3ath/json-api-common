@@ -3,9 +3,9 @@ import 'package:json_api_common/src/http/headers.dart';
 /// The request which is sent by the client and received by the server
 class HttpRequest {
   HttpRequest(String method, this.uri,
-      {this.body = '', Map<String, String>? headers})
+      {this.body = '', Map<String, String> headers = const {}})
       : method = method.toLowerCase() {
-    this.headers.addAll(headers ?? {});
+    this.headers.addAll(headers);
   }
 
   static const get = 'get';

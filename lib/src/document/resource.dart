@@ -5,13 +5,13 @@ import 'package:json_api_common/src/document/relationship.dart';
 
 class Resource extends BaseResource with Identity {
   Resource(this.type, this.id,
-      {Map<String, Link>? links,
-      Map<String, Object?>? meta,
-      Map<String, Object?>? attributes,
-      Map<String, Relationship>? relationships})
+      {Map<String, Link> links = const {},
+      Map<String, Object /*?*/ > meta = const {},
+      Map<String, Object /*?*/ > attributes = const {},
+      Map<String, Relationship> relationships = const {}})
       : super(
             attributes: attributes, relationships: relationships, meta: meta) {
-    this.links.addAll(links ?? {});
+    this.links.addAll(links);
   }
 
   @override

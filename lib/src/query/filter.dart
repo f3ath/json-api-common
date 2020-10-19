@@ -9,13 +9,15 @@ class Filter with MapMixin<String, String> {
   /// ```
   /// ?filter[post]=1,2&filter[author]=12
   /// ```
-  Filter([Map<String, String>? parameters]) {
-    addAll(parameters ?? {});
+  Filter([Map<String, String> parameters = const {}]) {
+    addAll(parameters);
   }
 
   static Filter fromUri(Uri uri) => Filter(uri.queryParametersAll
       .map((k, v) => MapEntry(_regex.firstMatch(k)?.group(1) ?? '', v.last))
         ..removeWhere((k, v) => k.isEmpty));
+
+  static final _regex = RegExp(r'^filter\[(.+)\]$');
 
   final _ = <String, String>{};
 
@@ -24,7 +26,7 @@ class Filter with MapMixin<String, String> {
       _.map((k, v) => MapEntry('filter[${k}]', v));
 
   @override
-  String? operator [](Object? key) => _[key];
+  String /*?*/ operator [](Object /*?*/ key) => _[key];
 
   @override
   void operator []=(String key, String value) => _[key] = value;
@@ -36,7 +38,5 @@ class Filter with MapMixin<String, String> {
   Iterable<String> get keys => _.keys;
 
   @override
-  String? remove(Object? key) => _.remove(key);
+  String /*?*/ remove(Object /*?*/ key) => _.remove(key);
 }
-
-final _regex = RegExp(r'^filter\[(.+)\]$');

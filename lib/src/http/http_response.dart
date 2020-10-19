@@ -3,8 +3,8 @@ import 'package:json_api_common/src/http/headers.dart';
 /// The response sent by the server and received by the client
 class HttpResponse {
   HttpResponse(this.statusCode,
-      {this.body = '', Map<String, String>? headers}) {
-    this.headers.addAll(headers ?? {});
+      {this.body = '', Map<String, String> headers = const {}}) {
+    this.headers.addAll(headers);
   }
 
   /// Response status code

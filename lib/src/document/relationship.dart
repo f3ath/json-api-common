@@ -4,13 +4,15 @@ import 'package:json_api_common/src/document/identifier.dart';
 import 'package:json_api_common/src/document/link.dart';
 
 abstract class Relationship with IterableMixin<Identifier> {
-  Relationship({Map<String, Link>? links, Map<String, Object?>? meta}) {
-    this.meta.addAll(meta ?? {});
-    this.links.addAll(links ?? {});
+  Relationship(
+      {Map<String, Link> links = const {},
+      Map<String, Object /*?*/ > meta = const {}}) {
+    this.meta.addAll(meta);
+    this.links.addAll(links);
   }
 
   final links = <String, Link>{};
-  final meta = <String, Object?>{};
+  final meta = <String, Object /*?*/ >{};
 
   Map<String, dynamic> toJson() => {
         if (links.isNotEmpty) 'links': links,
@@ -22,23 +24,34 @@ abstract class Relationship with IterableMixin<Identifier> {
 }
 
 class One extends Relationship {
-  One(this.identifier, {Map<String, Link>? links, Map<String, Object?>? meta})
+  One(this.identifierOrNull,
+      {Map<String, Link> links = const {},
+      Map<String, Object /*?*/ > meta = const {}})
       : super(links: links, meta: meta);
 
+  One.empty(
+      {Map<String, Link> links = const {},
+      Map<String, Object /*?*/ > meta = const {}})
+      : identifierOrNull = null,
+        super(links: links, meta: meta);
+
   @override
-  Map<String, dynamic> toJson() => {...super.toJson(), 'data': identifier};
+  Map<String, dynamic> toJson() =>
+      {...super.toJson(), 'data': identifierOrNull};
 
   /// Nullable
-  final Identifier? identifier;
+  final Identifier /*?*/ identifierOrNull;
 
   @override
-  Iterator<Identifier> get iterator =>
-      identifier == null ? <Identifier>[].iterator : [identifier!].iterator;
+  Iterator<Identifier> get iterator => identifierOrNull == null
+      ? <Identifier>[].iterator
+      : [identifierOrNull].iterator;
 }
 
 class Many extends Relationship {
   Many(Iterable<Identifier> identifiers,
-      {Map<String, Link>? links, Map<String, Object?>? meta})
+      {Map<String, Link> links = const {},
+      Map<String, Object /*?*/ > meta = const {}})
       : super(links: links, meta: meta) {
     identifiers.forEach((_) => _map[_.key] = _);
   }
@@ -54,6 +67,8 @@ class Many extends Relationship {
 }
 
 class IncompleteRelationship extends Relationship {
-  IncompleteRelationship({Map<String, Link>? links, Map<String, Object?>? meta})
+  IncompleteRelationship(
+      {Map<String, Link> links = const {},
+      Map<String, Object /*?*/ > meta = const {}})
       : super(links: links, meta: meta);
 }
