@@ -22,5 +22,3 @@ abstract class Relationship with IterableMixin<Identifier /*!*/ > {
   @override
   Iterator<Identifier /*!*/ > get iterator => const <Identifier>[].iterator;
 }
-
-

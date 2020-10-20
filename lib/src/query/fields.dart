@@ -38,8 +38,8 @@ class Fields with MapMixin<String, List<String>> {
   Iterable<String> get keys => _map.keys;
 
   @override
-  List<String>/*?*/ remove(Object /*?*/ key) => _map.remove(key);
+  List<String> /*?*/ remove(Object /*?*/ key) => _map.remove(key);
 
   @override
-  List<String>/*?*/ operator [](Object/*?*/ key) => _map[key];
+  List<String> /*?*/ operator [](Object /*?*/ key) => _map[key];
 }

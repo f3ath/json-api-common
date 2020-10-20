@@ -43,7 +43,7 @@ class ErrorObject {
   String detail;
 
   /// Meta data.
-  final meta = <String, Object/*?*/>{};
+  final meta = <String, Object /*?*/ >{};
 
   /// Error source.
   final source = ErrorSource();
