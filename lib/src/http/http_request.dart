@@ -8,12 +8,6 @@ class HttpRequest {
     this.headers.addAll(headers);
   }
 
-  static const get = 'get';
-  static const post = 'post';
-  static const delete = 'delete';
-  static const patch = 'patch';
-  static const options = 'options';
-
   /// Requested URI
   final Uri uri;
 
@@ -25,14 +19,4 @@ class HttpRequest {
 
   /// Request headers. Lowercase keys
   final headers = Headers();
-
-  bool get isGet => method == get;
-
-  bool get isPost => method == post;
-
-  bool get isDelete => method == delete;
-
-  bool get isPatch => method == patch;
-
-  bool get isOptions => method == options;
 }

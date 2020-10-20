@@ -1,5 +1,8 @@
 import 'package:json_api_common/document.dart';
 import 'package:json_api_common/src/document/error_source.dart';
+import 'package:json_api_common/src/document/relationship/incomplete.dart';
+import 'package:json_api_common/src/document/relationship/many.dart';
+import 'package:json_api_common/src/document/relationship/one.dart';
 import 'package:json_api_common/src/extensions.dart';
 import 'package:json_api_common/src/nullable.dart';
 
@@ -7,7 +10,7 @@ import 'package:json_api_common/src/nullable.dart';
 class Document {
   Document(this._json);
 
-  final Map _json;
+  final Map /*!*/ _json;
 
   /// Included resources
   Iterable<Resource> included() => _json
@@ -25,7 +28,7 @@ class Document {
   Map<String, Object /*?*/ > meta() => _getMeta(_json);
 
   /// Document links
-  Map<String, Link> links() => _getLinks(_json);
+  Map<String /*!*/, Link> links() => _getLinks(_json);
 
   Relationship asRelationship() => _relationship(_json);
 
@@ -41,24 +44,18 @@ class Document {
   Resource /*?*/ asResourceOrNull() =>
       nullable(_resource)(_json.getNullable<Map>('data'));
 
-  static Resource _resource(Map json) => Resource(
-      json.get<String>('type'), json.get<String>('id'),
-      attributes:
-          json.get<Map<String, Object /*?*/ >>('attributes', orGet: () => {}),
-      relationships: json.get<Map>('relationships', orGet: () => {}).map(
-          (key, value) => MapEntry(key.toString(),
-              _relationship(value is Map ? value : throw FormatException()))),
-      links: _getLinks(json),
-      meta: _getMeta(json));
+  static Resource _resource(Map json) =>
+      Resource(json.get<String>('type'), json.get<String>('id'),
+          attributes: _getAttributes(json),
+          relationships: _getRelationships(json),
+          links: _getLinks(json),
+          meta: _getMeta(json));
 
-  static NewResource _newResource(Map json) => NewResource(
-      json.get<String>('type'),
-      attributes:
-          json.get<Map<String, Object /*?*/ >>('attributes', orGet: () => {}),
-      relationships: json
-          .get<Map<String, Map>>('relationships', orGet: () => {})
-          .map((key, value) => MapEntry(key, _relationship(value))),
-      meta: _getMeta(json));
+  static NewResource _newResource(Map json) =>
+      NewResource(json.get<String>('type'),
+          attributes: _getAttributes(json),
+          relationships: _getRelationships(json),
+          meta: _getMeta(json));
 
   static Relationship _relationship(Map json) {
     final links = _getLinks(json);
@@ -116,7 +113,14 @@ class Document {
     throw FormatException('Invalid JSON');
   }
 
-  static Map<String, Link> _getLinks(Map json) => json
+  static Map<String, Object /*?*/ > _getAttributes(Map json) =>
+      json.get<Map<String, Object /*?*/ >>('attributes', orGet: () => {});
+
+  static Map<String, Relationship> _getRelationships(Map json) => json
+      .get<Map>('relationships', orGet: () => {})
+      .map((key, value) => MapEntry(key, _relationship(value)));
+
+  static Map<String /*!*/, Link> _getLinks(Map json) => json
       .get<Map>('links', orGet: () => {})
       .map((k, v) => MapEntry(k.toString(), _link(v)));
 

@@ -26,6 +26,13 @@ class CollectionTarget implements Target {
 
   @override
   T map<T>(TargetMapper<T> mapper) => mapper.collection(this);
+
+  @override
+  bool operator ==(Object other) =>
+      other is CollectionTarget && other.type == type;
+
+  @override
+  int get hashCode => 0;
 }
 
 class ResourceTarget implements Target {
@@ -41,6 +48,13 @@ class ResourceTarget implements Target {
 
   @override
   T map<T>(TargetMapper<T> mapper) => mapper.resource(this);
+
+  @override
+  bool operator ==(Object other) =>
+      other is ResourceTarget && other.type == type && other.id == id;
+
+  @override
+  int get hashCode => 0;
 }
 
 class RelatedTarget implements Target {
@@ -59,6 +73,16 @@ class RelatedTarget implements Target {
 
   @override
   T map<T>(TargetMapper<T> mapper) => mapper.related(this);
+
+  @override
+  bool operator ==(Object other) =>
+      other is RelatedTarget &&
+      other.type == type &&
+      other.id == id &&
+      other.relationship == relationship;
+
+  @override
+  int get hashCode => 0;
 }
 
 class RelationshipTarget implements Target {
@@ -77,4 +101,14 @@ class RelationshipTarget implements Target {
 
   @override
   T map<T>(TargetMapper<T> mapper) => mapper.relationship(this);
+
+  @override
+  bool operator ==(Object other) =>
+      other is RelationshipTarget &&
+      other.type == type &&
+      other.id == id &&
+      other.relationship == relationship;
+
+  @override
+  int get hashCode => 0;
 }

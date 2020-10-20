@@ -5,8 +5,10 @@ void main() {
   test('emptiness', () {
     expect(Include().isEmpty, isTrue);
     expect(Include().isNotEmpty, isFalse);
+    expect(Include().length, 0);
     expect(Include(['foo']).isEmpty, isFalse);
     expect(Include(['foo']).isNotEmpty, isTrue);
+    expect(Include(['foo']).length, 1);
   });
 
   test('Can decode url without duplicate keys', () {
