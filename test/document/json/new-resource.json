@@ -1,0 +1,16 @@
+{
+  "data": {
+    "type": "articles",
+    "attributes": {
+      "title": "A new article"
+    },
+    "relationships": {
+      "author": {
+        "data": {
+          "type": "people",
+          "id": "42"
+        }
+      }
+    }
+  }
+}

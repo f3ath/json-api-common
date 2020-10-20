@@ -7,30 +7,20 @@ on:
     branches: [ master ]
 
 jobs:
-  linter:
+  build:
+
     runs-on: ubuntu-latest
+
     container:
       image:  google/dart:latest
+
     steps:
-    - uses: actions/checkout@v2
-    - name: Install dependencies
-      run: pub get
-    - name: Linter
-      run: dartanalyzer --fatal-infos --fatal-warnings lib test
-      
-  test:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        version: [latest, '2.8']
-        platform: ['vm', 'chrome', 'firefox']
-    container:
-      image:  google/dart:${{ matrix.version }}
-    steps:
-    - uses: actions/checkout@v2
-    - name: Install Browsers
-      run: apt install google-chrome-stable firefox-esr
-    - name: Install dependencies
-      run: pub get
-    - name: Run tests
-      run: pub run test --platform ${{ matrix.platform }}
+      - uses: actions/checkout@v2
+      - name: Install dependencies
+        run: dart pub get
+      - name: Format
+        run: dartfmt --dry-run --set-exit-if-changed lib test
+      - name: Analyzer
+        run: dart analyze --fatal-infos --fatal-warnings
+      - name: Tests
+        run: dart pub run test_coverage --no-badge --print-test-output --min-coverage 100

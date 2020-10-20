@@ -4,7 +4,7 @@ import 'package:json_api_common/src/http/http_response.dart';
 /// A callable class which converts requests to responses
 abstract class HttpHandler {
   /// Sends the request over the network and returns the received response
-  Future<HttpResponse> call(HttpRequest request);
+  Future<HttpResponse /*!*/ > call(HttpRequest request);
 
   /// Creates an instance of [HttpHandler] from a function
   static HttpHandler fromFunction(HttpHandlerFunc f) => _HandlerFromFunction(f);
