@@ -17,10 +17,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Install dependencies
-        run: pub get
+        run: dart pub get
       - name: Format
         run: dartfmt --dry-run --set-exit-if-changed lib test
       - name: Analyzer
-        run: dartanalyzer --fatal-infos --fatal-warnings lib test
+        run: dart analyze --fatal-infos --fatal-warnings
       - name: Tests
-        run: pub run test_coverage --no-badge --print-test-output --min-coverage 100
+        run: dart pub run test_coverage --no-badge --print-test-output --min-coverage 100
