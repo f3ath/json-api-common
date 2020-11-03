@@ -3,5 +3,4 @@
 library routing;
 
 export 'package:json_api_common/src/routing/recommended_url_design.dart';
-export 'package:json_api_common/src/routing/target.dart';
 export 'package:json_api_common/src/routing/url_design.dart';

@@ -39,7 +39,7 @@ void main() {
   });
 
   test('incomplete', () {
-    expect(IncompleteRelationship(), isEmpty);
-    expect([...IncompleteRelationship()], isEmpty);
+    expect(Relationship(), isEmpty);
+    expect([...Relationship()], isEmpty);
   });
 }

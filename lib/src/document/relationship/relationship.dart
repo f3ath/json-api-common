@@ -3,7 +3,7 @@ import 'dart:collection';
 import 'package:json_api_common/src/document/identifier.dart';
 import 'package:json_api_common/src/document/link.dart';
 
-abstract class Relationship with IterableMixin<Identifier /*!*/ > {
+class Relationship with IterableMixin<Identifier /*!*/ > {
   Relationship(
       {Map<String, Link> links = const {},
       Map<String, Object /*?*/ > meta = const {}}) {

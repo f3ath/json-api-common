@@ -31,6 +31,8 @@ class Resource extends BaseResource with Identity {
 
   final links = <String, Link>{};
 
+  Identifier get identifier => Identifier(type, id);
+
   Map<String, Object> toJson() => {
         'type': type,
         'id': id,
