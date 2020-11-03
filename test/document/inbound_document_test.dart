@@ -164,10 +164,12 @@ void main() {
       test('throws on invalid doc', () {
         expect(() => InboundDocument(manyEmpty).asResourceOrNull(),
             throwsFormatException);
-        expect(() => InboundDocument(newResource).asResource(), throwsFormatException);
+        expect(() => InboundDocument(newResource).asResource(),
+            throwsFormatException);
         expect(() => InboundDocument(newResource).asResourceOrNull(),
             throwsFormatException);
-        expect(() => InboundDocument({}).asResourceOrNull(), throwsFormatException);
+        expect(() => InboundDocument({}).asResourceOrNull(),
+            throwsFormatException);
         expect(() => InboundDocument({'data': 42}).asRelationship(),
             throwsFormatException);
         expect(
