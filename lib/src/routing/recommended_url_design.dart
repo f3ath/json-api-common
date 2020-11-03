@@ -9,6 +9,10 @@ class RecommendedUrlDesign implements UrlDesign {
   /// To generate URIs without a hostname, pass `Uri(path: '/')` as [base].
   const RecommendedUrlDesign(this.base);
 
+  /// A "path only" version of the recommended URL design, e.g.
+  /// `/books`, `/books/42`, `/books/42/authors`
+  static final pathOnly = RecommendedUrlDesign(Uri(path: '/'));
+
   final Uri base;
 
   /// Returns a URL for the primary resource collection of type [type].

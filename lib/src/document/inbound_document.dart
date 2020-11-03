@@ -1,14 +1,13 @@
 import 'package:json_api_common/document.dart';
 import 'package:json_api_common/src/document/error_source.dart';
-import 'package:json_api_common/src/document/relationship/incomplete.dart';
 import 'package:json_api_common/src/document/relationship/many.dart';
 import 'package:json_api_common/src/document/relationship/one.dart';
 import 'package:json_api_common/src/extensions.dart';
 import 'package:json_api_common/src/nullable.dart';
 
-/// A generic incoming JSON:API document
-class Document {
-  Document(this._json);
+/// A generic inbound JSON:API document
+class InboundDocument {
+  InboundDocument(this._json);
 
   final Map /*!*/ _json;
 
@@ -74,7 +73,7 @@ class Document {
       }
       throw FormatException('Invalid relationship object');
     }
-    return IncompleteRelationship(links: links, meta: meta);
+    return Relationship(links: links, meta: meta);
   }
 
   /// Decodes Identifier from [json]. Returns the decoded object.

@@ -5,10 +5,10 @@ import 'package:json_api_common/document.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('Document', () {
+  group('InboundDocument', () {
     group('Errors', () {
       test('Minimal', () {
-        final e = Document({
+        final e = InboundDocument({
           'errors': [{}]
         }).errors().first;
         expect(e.id, '');
@@ -34,7 +34,7 @@ void main() {
           'links': {'foo': '/bar'},
           'meta': {'foo': 42},
         };
-        final e = Document({
+        final e = InboundDocument({
           'errors': [error]
         }).errors().first;
 
@@ -53,7 +53,7 @@ void main() {
 
       test('Invalid', () {
         expect(
-            () => Document({
+            () => InboundDocument({
                   'errors': [
                     {'id': []}
                   ]
@@ -75,7 +75,7 @@ void main() {
       final manyEmpty = readMock('rel-many-empty');
 
       test('can parse the standard example', () {
-        final doc = Document(example);
+        final doc = InboundDocument(example);
         expect(
             doc
                 .asResourceCollection()
@@ -91,18 +91,18 @@ void main() {
       });
 
       test('can parse primary resource', () {
-        final doc = Document(resource);
+        final doc = InboundDocument(resource);
         final article = doc.asResource();
         expect(article.id, '1');
         expect(article.attributes['title'], 'JSON:API paints my bikeshed!');
-        expect(article.relationships['author'], isA<IncompleteRelationship>());
+        expect(article.relationships['author'], isA<Relationship>());
         expect(doc.included(), isEmpty);
         expect(doc.links()['self'].toString(), 'http://example.com/articles/1');
         expect(doc.meta(), isEmpty);
       });
 
       test('can parse a new resource', () {
-        final doc = Document(newResource);
+        final doc = InboundDocument(newResource);
         final article = doc.asNewResource();
         expect(article.attributes['title'], 'A new article');
         expect(doc.included(), isEmpty);
@@ -111,7 +111,7 @@ void main() {
       });
 
       test('can parse related resource', () {
-        final doc = Document(relatedEmpty);
+        final doc = InboundDocument(relatedEmpty);
         expect(doc.asResourceOrNull(), isNull);
         expect(doc.included(), isEmpty);
         expect(doc.links()['self'].toString(),
@@ -120,7 +120,7 @@ void main() {
       });
 
       test('can parse to-one', () {
-        final doc = Document(one);
+        final doc = InboundDocument(one);
         expect(doc.asRelationship(), isA<One>());
         expect(doc.asRelationship(), isNotEmpty);
         expect(doc.asRelationship().first.type, 'people');
@@ -131,7 +131,7 @@ void main() {
       });
 
       test('can parse empty to-one', () {
-        final doc = Document(oneEmpty);
+        final doc = InboundDocument(oneEmpty);
         expect(doc.asRelationship(), isA<One>());
         expect(doc.asRelationship(), isEmpty);
         expect(doc.included(), isEmpty);
@@ -141,7 +141,7 @@ void main() {
       });
 
       test('can parse to-many', () {
-        final doc = Document(many);
+        final doc = InboundDocument(many);
         expect(doc.asRelationship(), isA<Many>());
         expect(doc.asRelationship(), isNotEmpty);
         expect(doc.asRelationship().first.type, 'tags');
@@ -152,7 +152,7 @@ void main() {
       });
 
       test('can parse empty to-many', () {
-        final doc = Document(manyEmpty);
+        final doc = InboundDocument(manyEmpty);
         expect(doc.asRelationship(), isA<Many>());
         expect(doc.asRelationship(), isEmpty);
         expect(doc.included(), isEmpty);
@@ -162,16 +162,18 @@ void main() {
       });
 
       test('throws on invalid doc', () {
-        expect(() => Document(manyEmpty).asResourceOrNull(),
+        expect(() => InboundDocument(manyEmpty).asResourceOrNull(),
             throwsFormatException);
-        expect(() => Document(newResource).asResource(), throwsFormatException);
-        expect(() => Document(newResource).asResourceOrNull(),
+        expect(() => InboundDocument(newResource).asResource(),
             throwsFormatException);
-        expect(() => Document({}).asResourceOrNull(), throwsFormatException);
-        expect(() => Document({'data': 42}).asRelationship(),
+        expect(() => InboundDocument(newResource).asResourceOrNull(),
+            throwsFormatException);
+        expect(() => InboundDocument({}).asResourceOrNull(),
+            throwsFormatException);
+        expect(() => InboundDocument({'data': 42}).asRelationship(),
             throwsFormatException);
         expect(
-            () => Document({
+            () => InboundDocument({
                   'links': {'self': 42}
                 }).asRelationship(),
             throwsFormatException);
