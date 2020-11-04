@@ -1,5 +1,5 @@
 name: json_api_common
-version: 0.0.5
+version: 0.0.6
 homepage: https://github.com/f3ath/json-api-common
 description: JSON:API for Dart. Common parts. See http://jsonapi.org
 environment:

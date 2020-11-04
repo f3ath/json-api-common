@@ -1,30 +1,26 @@
-import 'package:json_api_common/src/document/base_resource.dart';
 import 'package:json_api_common/src/document/identifier.dart';
 import 'package:json_api_common/src/document/identity.dart';
 import 'package:json_api_common/src/document/link.dart';
+import 'package:json_api_common/src/document/new_resource.dart';
 import 'package:json_api_common/src/document/relationship/relationship.dart';
 
-class Resource extends BaseResource with Identity {
-  Resource(this.type, this.id,
+class Resource extends NewResource with Identity {
+  Resource(String type, this.id,
       {Map<String, Link> links = const {},
       Map<String, Object /*?*/ > meta = const {},
       Map<String, Object /*?*/ > attributes = const {},
       Map<String, Identifier> one = const {},
       Map<String, Iterable<Identifier>> many = const {},
       Map<String /*!*/, Relationship> relationships = const {}})
-      : super(
+      : super(type,
             attributes: attributes,
             one: one,
             many: many,
             relationships: relationships,
             meta: meta) {
-    ArgumentError.checkNotNull(type);
     ArgumentError.checkNotNull(id);
     this.links.addAll(links);
   }
-
-  @override
-  final String type;
 
   @override
   final String id;
@@ -33,6 +29,7 @@ class Resource extends BaseResource with Identity {
 
   Identifier get identifier => Identifier(type, id);
 
+  @override
   Map<String, Object> toJson() => {
         'type': type,
         'id': id,
