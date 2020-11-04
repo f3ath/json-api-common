@@ -103,11 +103,17 @@ void main() {
 
       test('can parse a new resource', () {
         final doc = InboundDocument(newResource);
-        final article = doc.asNewResource();
+        final article = doc.asResourceOrNewResource();
         expect(article.attributes['title'], 'A new article');
         expect(doc.included(), isEmpty);
         expect(doc.links(), isEmpty);
         expect(doc.meta(), isEmpty);
+      });
+
+      test('asNewResource() returns a Resource if data is sufficient', () {
+        final doc = InboundDocument(resource);
+        final article = doc.asResourceOrNewResource() as Resource;
+        expect(article.id, isNotEmpty);
       });
 
       test('can parse related resource', () {

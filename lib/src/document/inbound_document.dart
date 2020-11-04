@@ -37,8 +37,14 @@ class InboundDocument {
   Resource asResource() =>
       _resource(_json.get<Map<String, Object /*?*/ >>('data'));
 
-  NewResource asNewResource() =>
-      _newResource(_json.get<Map<String, Object /*?*/ >>('data'));
+  /// Tries to parse [Resource] or [NewResource] depending on the incoming data
+  NewResource asResourceOrNewResource() {
+    final data = _json.get<Map<String, Object /*?*/ >>('data');
+    if (data.containsKey('id')) {
+      return _resource(data);
+    }
+    return _newResource(data);
+  }
 
   Resource /*?*/ asResourceOrNull() =>
       nullable(_resource)(_json.getNullable<Map>('data'));
